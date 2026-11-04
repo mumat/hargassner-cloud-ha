@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from typing import Any, cast
 
 import voluptuous as vol
 from homeassistant.config_entries import ConfigFlowResult, OptionsFlowWithReload
@@ -71,4 +72,4 @@ class HargassnerCloudOptionsFlow(OptionsFlowWithReload):
                 vol.Optional(CONF_FIELD_OVERRIDES, default=defaults[CONF_FIELD_OVERRIDES]): str,
             }
         )
-        return self.async_show_form(step_id="init", data_schema=schema, errors=errors)
+        return self.async_show_form(step_id="init", data_schema=cast("Any", schema), errors=errors)

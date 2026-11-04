@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Mapping
-from typing import Any
+from typing import Any, cast
 
 import voluptuous as vol
 from aiohttp import ClientError
@@ -116,7 +116,7 @@ class HargassnerCloudConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Optional(CONF_AREA, default=""): str,
             }
         )
-        return self.async_show_form(step_id="user", data_schema=schema, errors=errors)
+        return self.async_show_form(step_id="user", data_schema=cast("Any", schema), errors=errors)
 
     async def async_step_installation(
         self, user_input: dict[str, Any] | None = None
@@ -128,9 +128,10 @@ class HargassnerCloudConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 self._pending_data, str(user_input[CONF_INSTALLATION])
             )
         choices = {item["id"]: item["name"] for item in self._installations}
+        schema = vol.Schema({vol.Required(CONF_INSTALLATION): vol.In(choices)})
         return self.async_show_form(
             step_id="installation",
-            data_schema=vol.Schema({vol.Required(CONF_INSTALLATION): vol.In(choices)}),
+            data_schema=cast("Any", schema),
         )
 
     async def async_step_reauth(self, entry_data: Mapping[str, Any]) -> ConfigFlowResult:
@@ -160,4 +161,6 @@ class HargassnerCloudConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 ),
             }
         )
-        return self.async_show_form(step_id="reauth_confirm", data_schema=schema, errors=errors)
+        return self.async_show_form(
+            step_id="reauth_confirm", data_schema=cast("Any", schema), errors=errors
+        )

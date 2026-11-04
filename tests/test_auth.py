@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+from typing import Any, cast
 
 import pytest
 
@@ -12,6 +13,10 @@ from custom_components.hargassner_cloud.exceptions import CloudMaintenanceError
 from tests.fakes import FakeResponse, FakeSession
 
 BASE = "https://example.test"
+
+
+def discover(session: FakeSession) -> tuple[str, str] | None:
+    return asyncio.run(fetch_client_credentials(cast(Any, session), BASE))
 
 
 def test_extract_from_login_call_site() -> None:
@@ -47,7 +52,7 @@ def test_discovery_via_manifest() -> None:
             FakeResponse(200, text=bundle),
         ]
     )
-    result = asyncio.run(fetch_client_credentials(session, BASE))
+    result = discover(session)
     assert result == ("1", "secret")
     assert session.get_calls[1][0] == f"{BASE}/build/assets/app-x.js"
 
@@ -62,7 +67,7 @@ def test_discovery_via_login_page() -> None:
             FakeResponse(200, text=bundle),
         ]
     )
-    result = asyncio.run(fetch_client_credentials(session, BASE))
+    result = discover(session)
     assert result == ("9", "page-secret")
 
 
@@ -70,11 +75,11 @@ def test_discovery_detects_maintenance() -> None:
     html = "<html><title>Hargassner | Wartungsarbeiten</title></html>"
     session = FakeSession(gets=[FakeResponse(404), FakeResponse(200, text=html)])
     with pytest.raises(CloudMaintenanceError):
-        asyncio.run(fetch_client_credentials(session, BASE))
+        discover(session)
 
 
 def test_discovery_returns_none_when_nothing_found() -> None:
     session = FakeSession(
         gets=[FakeResponse(404), FakeResponse(200, text="<html></html>"), FakeResponse(404)]
     )
-    assert asyncio.run(fetch_client_credentials(session, BASE)) is None
+    assert discover(session) is None

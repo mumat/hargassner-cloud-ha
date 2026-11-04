@@ -51,12 +51,13 @@ class CloudCoordinator(DataUpdateCoordinator[InstallationState]):
         )
         self.client = client
         self.enable_measurements = enable_measurements
+        self._entry_id = entry.entry_id
 
     # -- repair issues -----------------------------------------------------
 
     @property
     def _issue_id(self) -> str:
-        return f"{ISSUE_WEB_CLIENT_CREDENTIALS}_{self.config_entry.entry_id}"
+        return f"{ISSUE_WEB_CLIENT_CREDENTIALS}_{self._entry_id}"
 
     def _async_create_credential_issue(self) -> None:
         ir.async_create_issue(
