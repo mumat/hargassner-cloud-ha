@@ -307,7 +307,7 @@ def boiler_sensors(num: int) -> list[SensorDefinition]:
     number = str(num)
     return [
         SensorDefinition(
-            key=f"boiler{num}_enum_state",
+            key=f"boiler{num}_state",
             translation_key="boiler_status",
             translation_placeholders={"number": number},
             icon="mdi:water-boiler",
@@ -402,7 +402,7 @@ def heating_circuit_sensors(widget_type: str, num: int) -> list[SensorDefinition
 
     return [
         SensorDefinition(
-            key=f"{prefix}_enum_state",
+            key=f"{prefix}_state",
             translation_key="circuit_status",
             translation_placeholders={"number": number},
             icon="mdi:radiator",
@@ -412,7 +412,7 @@ def heating_circuit_sensors(widget_type: str, num: int) -> list[SensorDefinition
             value_fn=lambda d: _enum_state(d, widget_type, "state", number, CIRCUIT_STATES),
         ),
         SensorDefinition(
-            key=f"{prefix}_circuit_mode",
+            key=f"{prefix}_mode",
             translation_key="circuit_operating_mode",
             translation_placeholders={"number": number},
             icon="mdi:cog",

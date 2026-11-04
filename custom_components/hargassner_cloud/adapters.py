@@ -3,17 +3,22 @@
 from __future__ import annotations
 
 import math
-import re
 from typing import Any
-
-_DECIMAL_PATTERN = re.compile(r"^[-+]?\d*(?:[.,]\d+)?$")
 
 
 def _canonical_number_string(value: str) -> str:
-    """Normalize a localized number string such as ``"1.234,5"``."""
-    normalized = value.strip().replace(" ", "")
-    normalized = normalized.replace(".", "").replace(",", ".")
-    return normalized
+    """Normalize a localized number string such as ``"1.234,5"``.
+
+    A comma is treated as the decimal separator (removing thousands dots); a
+    lone dot is kept as the decimal separator; several dots without a comma are
+    treated as thousands separators.
+    """
+    text = value.strip().replace(" ", "")
+    if "," in text:
+        return text.replace(".", "").replace(",", ".")
+    if text.count(".") > 1:
+        return text.replace(".", "")
+    return text
 
 
 def to_float(value: Any) -> float | None:
@@ -27,11 +32,8 @@ def to_float(value: Any) -> float | None:
         text = value.strip()
         if text.lower() in {"", "nan", "null", "none", "-"}:
             return None
-        candidate = text.replace(" ", "")
-        if not _DECIMAL_PATTERN.match(candidate):
-            candidate = _canonical_number_string(text)
         try:
-            result = float(candidate)
+            result = float(_canonical_number_string(text))
         except ValueError:
             return None
         return None if math.isnan(result) or math.isinf(result) else result
