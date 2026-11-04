@@ -25,9 +25,7 @@ from .exceptions import CloudMaintenanceError
 
 _LOGGER = logging.getLogger(__name__)
 
-_BUNDLE_SCRIPT_RE = re.compile(
-    r"""<script[^>]+src=["']([^"']*?/build/assets/app-[^"']+\.js)["']"""
-)
+_BUNDLE_SCRIPT_RE = re.compile(r"""<script[^>]+src=["']([^"']*?/build/assets/app-[^"']+\.js)["']""")
 _LOGIN_CALL_SITE_RE = re.compile(
     r"static login\(\w+,\w+\)\{return \w+\.login\(\w+,\w+,([\w$]+),([\w$]+)\)\}"
 )
@@ -47,13 +45,11 @@ def _headers() -> dict[str, str]:
     }
 
 
-async def _get_text(
-    session: ClientSession, url: str, timeout: int = 20
-) -> str | None:
+async def _get_text(session: ClientSession, url: str, seconds: int = 20) -> str | None:
     """Fetch a URL as text, returning ``None`` on any failure."""
     try:
         async with session.get(
-            url, headers=_headers(), timeout=ClientTimeout(total=timeout)
+            url, headers=_headers(), timeout=ClientTimeout(total=seconds)
         ) as response:
             if response.status >= 400:
                 _LOGGER.debug("GET %s -> HTTP %s", url, response.status)
@@ -97,9 +93,7 @@ async def _credentials_in_bundle(
     return parse_client_credentials(bundle)
 
 
-async def _credentials_in_manifest(
-    session: ClientSession, base: str
-) -> tuple[str, str] | None:
+async def _credentials_in_manifest(session: ClientSession, base: str) -> tuple[str, str] | None:
     """Discover the current hashed entry bundle via the Vite manifest."""
     try:
         async with session.get(
@@ -131,9 +125,7 @@ async def _credentials_in_manifest(
     return await _credentials_in_bundle(session, base, f"{base}/build/{entry}")
 
 
-async def fetch_client_credentials(
-    session: ClientSession, base_url: str
-) -> tuple[str, str] | None:
+async def fetch_client_credentials(session: ClientSession, base_url: str) -> tuple[str, str] | None:
     """Discover the public web-client credentials from the live frontend.
 
     Raises :class:`CloudMaintenanceError` when the portal serves its
@@ -157,9 +149,7 @@ async def fetch_client_credentials(
                 _LOGGER.debug("Discovered web-client credentials via the login page")
                 return credentials
         elif _MAINTENANCE_TITLE_RE.search(html):
-            raise CloudMaintenanceError(
-                "Hargassner Cloud is down for scheduled maintenance"
-            )
+            raise CloudMaintenanceError("Hargassner Cloud is down for scheduled maintenance")
 
     credentials = await _credentials_in_bundle(session, base, f"{base}/js/app.js")
     if credentials:

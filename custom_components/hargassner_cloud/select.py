@@ -23,8 +23,8 @@ from .const import (
 )
 from .coordinator import CloudCoordinator
 from .entity import CloudEntity
-from .helpers import parameter_kind, normalize_widget_number
-from .models import InstallationState, CloudParameter, CloudWidget
+from .helpers import normalize_widget_number, parameter_kind
+from .models import CloudParameter, CloudWidget, InstallationState
 
 
 def option_key(api_option: object, prefixes: tuple[str, ...]) -> str:
@@ -109,9 +109,7 @@ def _templates(data: InstallationState) -> list[_SelectTemplate]:
     return specs
 
 
-def _option_keys(
-    parameter: CloudParameter, prefixes: tuple[str, ...]
-) -> list[str]:
+def _option_keys(parameter: CloudParameter, prefixes: tuple[str, ...]) -> list[str]:
     return [option_key(option, prefixes) for option in (parameter.options or [])]
 
 
@@ -130,9 +128,7 @@ def _description(spec: _SelectTemplate, parameter: CloudParameter) -> SelectDefi
     )
 
 
-def _generic_definition(
-    widget: CloudWidget, parameter: CloudParameter
-) -> SelectDefinition:
+def _generic_definition(widget: CloudWidget, parameter: CloudParameter) -> SelectDefinition:
     return SelectDefinition(
         key=f"param_{widget.key}_{parameter.key}",
         name=f"{widget.name} {parameter.key.replace('_', ' ').title()}",
@@ -144,9 +140,7 @@ def _generic_definition(
     )
 
 
-def build_definitions(
-    data: InstallationState, expose_all: bool
-) -> list[SelectDefinition]:
+def build_definitions(data: InstallationState, expose_all: bool) -> list[SelectDefinition]:
     descriptions: list[SelectDefinition] = []
     covered: set[tuple[str, str | None, str]] = set()
 

@@ -83,18 +83,12 @@ class HargassnerCloudConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         await self.async_set_unique_id(installation_id)
         self._abort_if_unique_id_configured()
         name = next(
-            (
-                item["name"]
-                for item in self._installations
-                if item["id"] == installation_id
-            ),
+            (item["name"] for item in self._installations if item["id"] == installation_id),
             "Hargassner Cloud",
         )
         return self.async_create_entry(title=name, data=data)
 
-    async def async_step_user(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
+    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         errors: dict[str, str] = {}
         if user_input is not None:
             try:
@@ -107,9 +101,7 @@ class HargassnerCloudConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 if not self._installations:
                     errors["base"] = "no_installations"
                 elif len(self._installations) == 1:
-                    return await self._async_finish_setup(
-                        user_input, self._installations[0]["id"]
-                    )
+                    return await self._async_finish_setup(user_input, self._installations[0]["id"])
                 else:
                     self._pending_data = user_input
                     return await self.async_step_installation()
@@ -118,9 +110,7 @@ class HargassnerCloudConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             {
                 vol.Required(CONF_USERNAME): str,
                 vol.Required(CONF_PASSWORD): selector.TextSelector(
-                    selector.TextSelectorConfig(
-                        type=selector.TextSelectorType.PASSWORD
-                    )
+                    selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)
                 ),
                 vol.Optional(CONF_BASE_URL, default=DEFAULT_BASE_URL): str,
                 vol.Optional(CONF_AREA, default=""): str,
@@ -140,14 +130,10 @@ class HargassnerCloudConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         choices = {item["id"]: item["name"] for item in self._installations}
         return self.async_show_form(
             step_id="installation",
-            data_schema=vol.Schema(
-                {vol.Required(CONF_INSTALLATION): vol.In(choices)}
-            ),
+            data_schema=vol.Schema({vol.Required(CONF_INSTALLATION): vol.In(choices)}),
         )
 
-    async def async_step_reauth(
-        self, entry_data: Mapping[str, Any]
-    ) -> ConfigFlowResult:
+    async def async_step_reauth(self, entry_data: Mapping[str, Any]) -> ConfigFlowResult:
         return await self.async_step_reauth_confirm()
 
     async def async_step_reauth_confirm(
@@ -164,22 +150,14 @@ class HargassnerCloudConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             else:
                 await self.async_set_unique_id(str(updated[CONF_INSTALLATION]))
                 self._abort_if_unique_id_mismatch()
-                return self.async_update_reload_and_abort(
-                    entry, data_updates=user_input
-                )
+                return self.async_update_reload_and_abort(entry, data_updates=user_input)
 
         schema = vol.Schema(
             {
-                vol.Required(
-                    CONF_USERNAME, default=entry.data.get(CONF_USERNAME, "")
-                ): str,
+                vol.Required(CONF_USERNAME, default=entry.data.get(CONF_USERNAME, "")): str,
                 vol.Required(CONF_PASSWORD): selector.TextSelector(
-                    selector.TextSelectorConfig(
-                        type=selector.TextSelectorType.PASSWORD
-                    )
+                    selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)
                 ),
             }
         )
-        return self.async_show_form(
-            step_id="reauth_confirm", data_schema=schema, errors=errors
-        )
+        return self.async_show_form(step_id="reauth_confirm", data_schema=schema, errors=errors)

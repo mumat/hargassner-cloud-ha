@@ -74,13 +74,9 @@ def _summarize_state(payload: object) -> dict[str, Any]:
                 widget["number"] = str(item["number"])
             values = item.get("values")
             if isinstance(values, dict):
-                if item.get("widget") == "HEATER" and isinstance(
-                    values.get("device_type"), str
-                ):
+                if item.get("widget") == "HEATER" and isinstance(values.get("device_type"), str):
                     device["type"] = values["device_type"]
-                widget["values"] = {
-                    str(key): _json_type(value) for key, value in values.items()
-                }
+                widget["values"] = {str(key): _json_type(value) for key, value in values.items()}
             parameters = item.get("parameters")
             if isinstance(parameters, dict):
                 widget["parameters"] = sorted(str(key) for key in parameters)

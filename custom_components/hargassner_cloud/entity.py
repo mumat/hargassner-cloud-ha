@@ -26,9 +26,7 @@ class CloudEntity(CoordinatorEntity[CloudCoordinator]):
 
     _attr_has_entity_name = True
 
-    def __init__(
-        self, coordinator: CloudCoordinator, entry: ConfigEntry, key: str
-    ) -> None:
+    def __init__(self, coordinator: CloudCoordinator, entry: ConfigEntry, key: str) -> None:
         super().__init__(coordinator)
         self._entry = entry
         self._attr_unique_id = f"{entry.entry_id}_{key}"
@@ -49,8 +47,7 @@ class CloudEntity(CoordinatorEntity[CloudCoordinator]):
             name=data.device_name if data else NAME,
             sw_version=metadata.get("software_version"),
             configuration_url=self._entry.data.get(CONF_BASE_URL, DEFAULT_BASE_URL),
-            suggested_area=self._entry.options.get(CONF_AREA)
-            or self._entry.data.get(CONF_AREA),
+            suggested_area=self._entry.options.get(CONF_AREA) or self._entry.data.get(CONF_AREA),
         )
 
     @property

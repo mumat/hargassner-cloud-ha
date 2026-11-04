@@ -12,7 +12,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .coordinator import CloudCoordinator
 from .entity import CloudEntity
-from .models import CloudAction, InstallationState, CloudWidget
+from .models import CloudAction, CloudWidget, InstallationState
 
 # Friendly translation keys for well-known actions.
 _KNOWN_ACTIONS = {
@@ -68,8 +68,7 @@ async def async_setup_entry(
         async_add_entities([])
         return
     entities = [
-        CloudButton(coordinator, entry, description)
-        for description in build_definitions(data)
+        CloudButton(coordinator, entry, description) for description in build_definitions(data)
     ]
     async_add_entities(entities)
 

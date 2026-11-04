@@ -36,10 +36,7 @@ def test_normalize_enum() -> None:
 def test_parameter_kind() -> None:
     assert parameter_kind(CloudParameter(key="m", resource="/x", options=["A"])) == "select"
     assert parameter_kind(CloudParameter(key="b", resource="/x", value=True)) == "switch"
-    assert (
-        parameter_kind(CloudParameter(key="n", resource="/x", minimum=0, maximum=10))
-        == "number"
-    )
+    assert parameter_kind(CloudParameter(key="n", resource="/x", minimum=0, maximum=10)) == "number"
     assert parameter_kind(CloudParameter(key="n", resource="/x", value="text")) is None
     assert parameter_kind(CloudParameter(key="n", value=True)) is None
 

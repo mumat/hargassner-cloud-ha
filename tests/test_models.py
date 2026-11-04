@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+from typing import Any
+
 from custom_components.hargassner_cloud.models import (
     InstallationState,
     parse_state,
 )
 
-PAYLOAD = {
+PAYLOAD: dict[str, Any] = {
     "data": [
         {
             "widget": "HEATER",
@@ -47,8 +49,12 @@ def test_parse_state() -> None:
     ]
     heater = widgets[0]
     assert heater.number is None
-    assert heater.parameter("program").resource == "/p"
-    assert heater.action("start_ignition").available is True
+    program = heater.parameter("program")
+    assert program is not None
+    assert program.resource == "/p"
+    ignition = heater.action("start_ignition")
+    assert ignition is not None
+    assert ignition.available is True
 
 
 def test_lookups() -> None:
@@ -66,13 +72,15 @@ def test_derived_properties() -> None:
     assert data.device_name == "My heater"
     assert data.device_model == "NanoPK"
     assert data.online is False
-    assert [widget.type for widget in data.heating_circuits()] == [
-        "HEATING_CIRCUIT_RADIATOR"
-    ]
+    assert [widget.type for widget in data.heating_circuits()] == ["HEATING_CIRCUIT_RADIATOR"]
     assert [widget.type for widget in data.boilers()] == ["BOILER"]
 
 
 def test_widget_key() -> None:
     data = make_data()
-    assert data.widget("BOILER", "1").key == "boiler_1"
-    assert data.widget("HEATER").key == "heater"
+    boiler = data.widget("BOILER", "1")
+    assert boiler is not None
+    assert boiler.key == "boiler_1"
+    heater = data.widget("HEATER")
+    assert heater is not None
+    assert heater.key == "heater"

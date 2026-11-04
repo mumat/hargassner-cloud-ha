@@ -25,7 +25,7 @@ from .const import (
 )
 from .coordinator import CloudCoordinator
 from .entity import CloudEntity, read_override
-from .helpers import first_defined, parse_field_overrides, normalize_widget_number
+from .helpers import first_defined, normalize_widget_number, parse_field_overrides
 from .models import InstallationState
 
 
@@ -74,9 +74,7 @@ def boiler_sensors(num: int) -> list[BinarySensorDefinition]:
     ]
 
 
-def heating_circuit_sensors(
-    widget_type: str, num: int
-) -> list[BinarySensorDefinition]:
+def heating_circuit_sensors(widget_type: str, num: int) -> list[BinarySensorDefinition]:
     number = str(num)
     return [
         BinarySensorDefinition(

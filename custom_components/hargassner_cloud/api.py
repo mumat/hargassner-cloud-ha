@@ -136,9 +136,7 @@ class CloudApiClient:
     async def _refresh_client_credentials(self) -> bool:
         """Try to discover fresh public web-client credentials."""
         try:
-            credentials = await fetch_client_credentials(
-                self._session, self._base
-            )
+            credentials = await fetch_client_credentials(self._session, self._base)
         except CloudMaintenanceError:
             self._record("web_client_credentials", "maintenance")
             raise
@@ -201,13 +199,9 @@ class CloudApiClient:
                     return response.status, await response.json(content_type=None)
                 return response.status, {}
         except (ClientError, TimeoutError) as err:
-            raise CloudConnectionError(
-                f"Legacy token request failed: {err}"
-            ) from err
+            raise CloudConnectionError(f"Legacy token request failed: {err}") from err
 
-    async def _post_json(
-        self, url: str, payload: dict[str, Any]
-    ) -> tuple[int, dict[str, Any]]:
+    async def _post_json(self, url: str, payload: dict[str, Any]) -> tuple[int, dict[str, Any]]:
         try:
             async with self._session.post(
                 url,
@@ -233,9 +227,7 @@ class CloudApiClient:
             status, body = await self._legacy_login_request()
 
         if status in (400, 401, 403) and self._credential_source != "discovered":
-            _LOGGER.warning(
-                "Login rejected with built-in web-client credentials; re-discovering"
-            )
+            _LOGGER.warning("Login rejected with built-in web-client credentials; re-discovering")
             if await self._refresh_client_credentials():
                 status, body = await self._login_request()
 
@@ -271,9 +263,7 @@ class CloudApiClient:
             expires_in = float(data.get("expires_in") or DEFAULT_TOKEN_LIFETIME)
         except (TypeError, ValueError):
             expires_in = DEFAULT_TOKEN_LIFETIME
-        self._expires_at = time.monotonic() + max(
-            expires_in - TOKEN_REFRESH_AHEAD, 60.0
-        )
+        self._expires_at = time.monotonic() + max(expires_in - TOKEN_REFRESH_AHEAD, 60.0)
 
     def _has_valid_token(self) -> bool:
         return bool(self._access_token) and time.monotonic() < self._expires_at
@@ -357,17 +347,13 @@ class CloudApiClient:
                         return response.status, None
         except (ClientError, TimeoutError) as err:
             self._record("request", "failed", error_type=type(err).__name__)
-            raise CloudConnectionError(
-                f"{method} {url} failed: {err}"
-            ) from err
+            raise CloudConnectionError(f"{method} {url} failed: {err}") from err
 
         if retry_needed:
             _LOGGER.debug("401 received for %s; re-authenticating and retrying", url)
             self._forget_token()
             self._refresh_token = None
-            return await self._request_json(
-                method, url, params=params, json=json, retry=False
-            )
+            return await self._request_json(method, url, params=params, json=json, retry=False)
         return 0, None
 
     # ------------------------------------------------------------------
@@ -408,9 +394,7 @@ class CloudApiClient:
             installations = self._installations_from_payload(payload)
             if installations:
                 return installations
-        raise CloudConnectionError(
-            "This account has no reachable Hargassner installations"
-        )
+        raise CloudConnectionError("This account has no reachable Hargassner installations")
 
     # ------------------------------------------------------------------
     # Device metadata
@@ -535,9 +519,7 @@ class CloudApiClient:
         self._metric_fields[device_id] = fields
         return fields
 
-    async def _latest_samples(
-        self, device_id: str, channels: list[str]
-    ) -> dict[str, Any]:
+    async def _latest_samples(self, device_id: str, channels: list[str]) -> dict[str, Any]:
         now = datetime.now(UTC)
         params = {
             "channels": ";".join(channels),

@@ -25,9 +25,7 @@ RAW = {
 
 
 def test_diagnostics_redacts_entry_and_payload() -> None:
-    coordinator = SimpleNamespace(
-        data=SimpleNamespace(raw=RAW), last_update_success=True
-    )
+    coordinator = SimpleNamespace(data=SimpleNamespace(raw=RAW), last_update_success=True)
     client = SimpleNamespace(
         diagnostics={
             "phase": "widgets",

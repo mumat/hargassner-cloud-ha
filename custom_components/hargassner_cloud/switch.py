@@ -15,7 +15,7 @@ from .adapters import to_bool
 from .coordinator import CloudCoordinator
 from .entity import CloudEntity
 from .helpers import parameter_kind
-from .models import InstallationState, CloudParameter, CloudWidget
+from .models import CloudParameter, CloudWidget, InstallationState
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -56,8 +56,7 @@ async def async_setup_entry(
         async_add_entities([])
         return
     entities = [
-        CloudSwitch(coordinator, entry, description)
-        for description in build_definitions(data)
+        CloudSwitch(coordinator, entry, description) for description in build_definitions(data)
     ]
     async_add_entities(entities)
 

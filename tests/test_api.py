@@ -37,9 +37,7 @@ def patch_discovery(monkeypatch: pytest.MonkeyPatch, result: tuple[str, str] | N
     async def _discover(_session: Any, _base: str) -> tuple[str, str] | None:
         return result
 
-    monkeypatch.setattr(
-        api_module, "fetch_client_credentials", _discover
-    )
+    monkeypatch.setattr(api_module, "fetch_client_credentials", _discover)
 
 
 def give_token(client: CloudApiClient) -> None:
@@ -149,9 +147,7 @@ def test_widgets_fallback_endpoint(monkeypatch: pytest.MonkeyPatch) -> None:
     ],
 )
 def test_parse_installations(payload: object) -> None:
-    assert CloudApiClient._installations_from_payload(payload) == [
-        {"id": "42", "name": "Home"}
-    ]
+    assert CloudApiClient._installations_from_payload(payload) == [{"id": "42", "name": "Home"}]
 
 
 def test_parse_devices() -> None:

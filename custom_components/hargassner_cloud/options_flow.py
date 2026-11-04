@@ -34,9 +34,7 @@ def _mapping_is_valid(raw: object) -> bool:
 class HargassnerCloudOptionsFlow(OptionsFlowWithReload):
     """Manage polling, area, mappings and optional entity coverage."""
 
-    async def async_step_init(
-        self, user_input: dict | None = None
-    ) -> ConfigFlowResult:
+    async def async_step_init(self, user_input: dict | None = None) -> ConfigFlowResult:
         errors: dict[str, str] = {}
         if user_input is not None:
             if _mapping_is_valid(user_input.get(CONF_FIELD_OVERRIDES)):
@@ -57,9 +55,7 @@ class HargassnerCloudOptionsFlow(OptionsFlowWithReload):
 
         schema = vol.Schema(
             {
-                vol.Optional(
-                    CONF_SCAN_INTERVAL, default=defaults[CONF_SCAN_INTERVAL]
-                ): vol.All(
+                vol.Optional(CONF_SCAN_INTERVAL, default=defaults[CONF_SCAN_INTERVAL]): vol.All(
                     vol.Coerce(int),
                     vol.Range(min=MIN_SCAN_INTERVAL, max=MAX_SCAN_INTERVAL),
                 ),
@@ -72,9 +68,7 @@ class HargassnerCloudOptionsFlow(OptionsFlowWithReload):
                     CONF_ENABLE_MEASUREMENTS,
                     default=defaults[CONF_ENABLE_MEASUREMENTS],
                 ): bool,
-                vol.Optional(
-                    CONF_FIELD_OVERRIDES, default=defaults[CONF_FIELD_OVERRIDES]
-                ): str,
+                vol.Optional(CONF_FIELD_OVERRIDES, default=defaults[CONF_FIELD_OVERRIDES]): str,
             }
         )
         return self.async_show_form(step_id="init", data_schema=schema, errors=errors)

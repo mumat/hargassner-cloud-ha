@@ -7,6 +7,7 @@ from typing import Any
 
 from .const import (
     NAME,
+    TYPE_BOILER,
     TYPE_HEATER,
     TYPE_HEATING_CIRCUIT,
     TYPE_HEATING_CONTROLLER,

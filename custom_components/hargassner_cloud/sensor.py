@@ -28,7 +28,7 @@ from .const import (
 )
 from .coordinator import CloudCoordinator
 from .entity import CloudEntity, read_override
-from .helpers import first_defined, parse_field_overrides, normalize_widget_number, normalize_enum
+from .helpers import first_defined, normalize_enum, normalize_widget_number, parse_field_overrides
 from .models import InstallationState, Measurement
 
 # ---------------------------------------------------------------------------
@@ -119,7 +119,9 @@ CIRCUIT_MODES = [
 ]
 
 
-def _enum_state(data: InstallationState, widget_type: str, field: str, number: str | None, options: list[str]) -> str | None:
+def _enum_state(
+    data: InstallationState, widget_type: str, field: str, number: str | None, options: list[str]
+) -> str | None:
     return normalize_enum(data.value(widget_type, field, number), options, "STATE")
 
 
@@ -148,9 +150,7 @@ def _outdoor_temp_avg(data: InstallationState) -> float | None:
     candidates: list[Any] = [data.value(TYPE_HEATER, "outdoor_temperature_average")]
     for circuit in data.heating_circuits():
         candidates.append(circuit.value("outdoor_temperature_average"))
-    candidates.append(
-        data.value(TYPE_HEATING_CONTROLLER, "outdoor_temperature_average")
-    )
+    candidates.append(data.value(TYPE_HEATING_CONTROLLER, "outdoor_temperature_average"))
     return to_float(first_defined(*candidates))
 
 
@@ -350,9 +350,7 @@ def boiler_sensors(num: int) -> list[SensorDefinition]:
     ]
 
 
-def controller_sensors(
-    *, include_outdoor: bool
-) -> list[SensorDefinition]:
+def controller_sensors(*, include_outdoor: bool) -> list[SensorDefinition]:
     descriptions = [
         SensorDefinition(
             key="controller_source_temp",
@@ -360,9 +358,7 @@ def controller_sensors(
             device_class=SensorDeviceClass.TEMPERATURE,
             native_unit_of_measurement="°C",
             state_class=SensorStateClass.MEASUREMENT,
-            value_fn=lambda d: to_float(
-                d.value(TYPE_HEATING_CONTROLLER, "source_temperature")
-            ),
+            value_fn=lambda d: to_float(d.value(TYPE_HEATING_CONTROLLER, "source_temperature")),
         ),
         SensorDefinition(
             key="controller_request_temp",
@@ -370,9 +366,7 @@ def controller_sensors(
             device_class=SensorDeviceClass.TEMPERATURE,
             native_unit_of_measurement="°C",
             state_class=SensorStateClass.MEASUREMENT,
-            value_fn=lambda d: to_float(
-                d.value(TYPE_HEATING_CONTROLLER, "request_temperature")
-            ),
+            value_fn=lambda d: to_float(d.value(TYPE_HEATING_CONTROLLER, "request_temperature")),
         ),
     ]
     if include_outdoor:
@@ -399,9 +393,7 @@ def controller_sensors(
     return descriptions
 
 
-def heating_circuit_sensors(
-    widget_type: str, num: int
-) -> list[SensorDefinition]:
+def heating_circuit_sensors(widget_type: str, num: int) -> list[SensorDefinition]:
     number = str(num)
     prefix = f"hc{num}"
 
@@ -473,23 +465,19 @@ def _measurement_entity_key(measurement: Measurement) -> str:
 
 
 def measurement_sensor(measurement: Measurement) -> SensorDefinition:
-    unit = measurement.unit
+    def read(data: InstallationState) -> float | None:
+        for item in data.measurements:
+            if item.key == measurement.key:
+                return to_float(item.value)
+        return None
+
     return SensorDefinition(
         key=_measurement_entity_key(measurement),
         name=measurement.name,
-        native_unit_of_measurement=unit,
+        native_unit_of_measurement=measurement.unit,
         state_class=SensorStateClass.MEASUREMENT,
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=lambda d, m=measurement: to_float(
-            next(
-                (
-                    item.value
-                    for item in d.measurements
-                    if item.key == m.key
-                ),
-                None,
-            )
-        ),
+        value_fn=read,
     )
 
 
@@ -500,9 +488,7 @@ def measurement_sensor(measurement: Measurement) -> SensorDefinition:
 
 def _is_supported(data: InstallationState, description: SensorDefinition) -> bool:
     """Skip optional sensors when the installation exposes no value."""
-    if description.key == "heater_temp_target" or description.key.endswith(
-        "_room_temp_current"
-    ):
+    if description.key == "heater_temp_target" or description.key.endswith("_room_temp_current"):
         return description.value_fn is not None and description.value_fn(data) is not None
     return True
 
@@ -522,16 +508,22 @@ async def async_setup_entry(
     if data.widget(TYPE_HEATER) is not None:
         for description in heater_sensors():
             if _is_supported(data, description) or description.key in overrides:
-                entities.append(CloudSensor(coordinator, entry, description, overrides.get(description.key)))
+                entities.append(
+                    CloudSensor(coordinator, entry, description, overrides.get(description.key))
+                )
 
     if data.widget(TYPE_BUFFER) is not None:
         for description in buffer_sensors():
-            entities.append(CloudSensor(coordinator, entry, description, overrides.get(description.key)))
+            entities.append(
+                CloudSensor(coordinator, entry, description, overrides.get(description.key))
+            )
 
     if data.widget(TYPE_HEATING_CONTROLLER) is not None:
         include_outdoor = data.widget(TYPE_HEATER) is None
         for description in controller_sensors(include_outdoor=include_outdoor):
-            entities.append(CloudSensor(coordinator, entry, description, overrides.get(description.key)))
+            entities.append(
+                CloudSensor(coordinator, entry, description, overrides.get(description.key))
+            )
 
     seen_boilers: set[int] = set()
     for widget in data.boilers():
@@ -540,7 +532,9 @@ async def async_setup_entry(
             continue
         seen_boilers.add(number)
         for description in boiler_sensors(number):
-            entities.append(CloudSensor(coordinator, entry, description, overrides.get(description.key)))
+            entities.append(
+                CloudSensor(coordinator, entry, description, overrides.get(description.key))
+            )
 
     seen_circuits: set[int] = set()
     for widget in data.heating_circuits():
@@ -550,7 +544,9 @@ async def async_setup_entry(
         seen_circuits.add(number)
         for description in heating_circuit_sensors(widget.type, number):
             if _is_supported(data, description) or description.key in overrides:
-                entities.append(CloudSensor(coordinator, entry, description, overrides.get(description.key)))
+                entities.append(
+                    CloudSensor(coordinator, entry, description, overrides.get(description.key))
+                )
 
     for measurement in data.measurements:
         description = measurement_sensor(measurement)

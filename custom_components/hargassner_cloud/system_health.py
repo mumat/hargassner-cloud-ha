@@ -11,9 +11,7 @@ from .const import CONF_BASE_URL, DEFAULT_BASE_URL, DOMAIN
 
 
 @callback
-def async_register(
-    hass: HomeAssistant, register: system_health.SystemHealthRegistration
-) -> None:
+def async_register(hass: HomeAssistant, register: system_health.SystemHealthRegistration) -> None:
     """Register Hargassner Cloud system health information."""
     register.async_register_info(system_health_info)
 
@@ -21,11 +19,7 @@ def async_register(
 async def system_health_info(hass: HomeAssistant) -> dict[str, Any]:
     """Return non-sensitive integration health information."""
     entries = hass.config_entries.async_entries(DOMAIN)
-    base_url = (
-        entries[0].data.get(CONF_BASE_URL, DEFAULT_BASE_URL)
-        if entries
-        else DEFAULT_BASE_URL
-    )
+    base_url = entries[0].data.get(CONF_BASE_URL, DEFAULT_BASE_URL) if entries else DEFAULT_BASE_URL
     return {
         "configured_entries": len(entries),
         "can_reach_server": system_health.async_check_can_reach_url(hass, base_url),

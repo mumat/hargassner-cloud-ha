@@ -14,6 +14,6 @@ if TYPE_CHECKING:
 class CloudRuntimeData:
     """Objects associated with a loaded config entry."""
 
-    client: "CloudApiClient"
-    coordinator: "CloudCoordinator"
+    client: CloudApiClient
+    coordinator: CloudCoordinator
     device_metadata: dict[str, str] = field(default_factory=dict)

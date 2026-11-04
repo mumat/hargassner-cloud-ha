@@ -23,8 +23,8 @@ from .const import (
 )
 from .coordinator import CloudCoordinator
 from .entity import CloudEntity
-from .helpers import parameter_kind, normalize_widget_number
-from .models import InstallationState, CloudParameter, CloudWidget
+from .helpers import normalize_widget_number, parameter_kind
+from .models import CloudParameter, CloudWidget, InstallationState
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -90,13 +90,67 @@ def _templates(data: InstallationState) -> list[_NumberTemplate]:
         )
 
     circuit_params = (
-        ("room_temperature_heating", "room_setpoint_day", NumberDeviceClass.TEMPERATURE, "°C", 10.0, 30.0, 0.5, NumberMode.BOX),
-        ("room_temperature_reduction", "room_setpoint_night", NumberDeviceClass.TEMPERATURE, "°C", 10.0, 30.0, 0.5, NumberMode.BOX),
-        ("room_temperature_correction", "room_offset", NumberDeviceClass.TEMPERATURE, "°C", -3.0, 3.0, 0.5, NumberMode.BOX),
+        (
+            "room_temperature_heating",
+            "room_setpoint_day",
+            NumberDeviceClass.TEMPERATURE,
+            "°C",
+            10.0,
+            30.0,
+            0.5,
+            NumberMode.BOX,
+        ),
+        (
+            "room_temperature_reduction",
+            "room_setpoint_night",
+            NumberDeviceClass.TEMPERATURE,
+            "°C",
+            10.0,
+            30.0,
+            0.5,
+            NumberMode.BOX,
+        ),
+        (
+            "room_temperature_correction",
+            "room_offset",
+            NumberDeviceClass.TEMPERATURE,
+            "°C",
+            -3.0,
+            3.0,
+            0.5,
+            NumberMode.BOX,
+        ),
         ("steepness", "heating_curve_slope", None, None, 0.2, 3.5, 0.05, NumberMode.SLIDER),
-        ("deactivation_limit_heating", "heating_cutoff", NumberDeviceClass.TEMPERATURE, "°C", -10.0, 50.0, 1.0, NumberMode.BOX),
-        ("deactivation_limit_reduction_day", "day_setback_cutoff", NumberDeviceClass.TEMPERATURE, "°C", -40.0, 50.0, 1.0, NumberMode.BOX),
-        ("deactivation_limit_reduction_night", "night_setback_cutoff", NumberDeviceClass.TEMPERATURE, "°C", -40.0, 50.0, 1.0, NumberMode.BOX),
+        (
+            "deactivation_limit_heating",
+            "heating_cutoff",
+            NumberDeviceClass.TEMPERATURE,
+            "°C",
+            -10.0,
+            50.0,
+            1.0,
+            NumberMode.BOX,
+        ),
+        (
+            "deactivation_limit_reduction_day",
+            "day_setback_cutoff",
+            NumberDeviceClass.TEMPERATURE,
+            "°C",
+            -40.0,
+            50.0,
+            1.0,
+            NumberMode.BOX,
+        ),
+        (
+            "deactivation_limit_reduction_night",
+            "night_setback_cutoff",
+            NumberDeviceClass.TEMPERATURE,
+            "°C",
+            -40.0,
+            50.0,
+            1.0,
+            NumberMode.BOX,
+        ),
     )
     seen: set[int] = set()
     for circuit in data.heating_circuits():

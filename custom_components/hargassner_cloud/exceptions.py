@@ -40,4 +40,6 @@ class CloudApiError(CloudError):
 
     def __init__(self, status: int, message: str = "") -> None:
         self.status = status
-        super().__init__(f"API returned {status}: {message}" if message else f"API returned {status}")
+        super().__init__(
+            f"API returned {status}: {message}" if message else f"API returned {status}"
+        )

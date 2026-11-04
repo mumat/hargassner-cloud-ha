@@ -13,8 +13,8 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from .api import CloudApiClient
 from .const import (
     DOMAIN,
-    ISSUE_WEB_CLIENT_CREDENTIALS,
     ISSUE_URL,
+    ISSUE_WEB_CLIENT_CREDENTIALS,
     NAME,
 )
 from .exceptions import (

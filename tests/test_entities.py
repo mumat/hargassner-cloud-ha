@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from custom_components.hargassner_cloud import binary_sensor as binary_platform
 from custom_components.hargassner_cloud import button as button_platform
 from custom_components.hargassner_cloud import climate as climate_platform
@@ -9,7 +11,7 @@ from custom_components.hargassner_cloud import sensor as sensor_platform
 from custom_components.hargassner_cloud import switch as switch_platform
 from custom_components.hargassner_cloud.models import InstallationState, parse_state
 
-PAYLOAD = {
+PAYLOAD: dict[str, Any] = {
     "data": [
         {
             "widget": "HEATER",
@@ -32,7 +34,13 @@ PAYLOAD = {
                     "resource": "/program",
                     "options": ["PROGRAM_OFF", "PROGRAM_AUTOMATIC"],
                 },
-                "fuel_stock": {"value": 1200, "resource": "/fuel", "min": 0, "max": 7874, "step": 1},
+                "fuel_stock": {
+                    "value": 1200,
+                    "resource": "/fuel",
+                    "min": 0,
+                    "max": 7874,
+                    "step": 1,
+                },
                 "extra_number": {"value": 5, "resource": "/en", "min": 0, "max": 10},
                 "extra_flag": {"value": True, "resource": "/flag"},
             },
@@ -100,7 +108,13 @@ PAYLOAD = {
                     "max": 30,
                     "step": 0.5,
                 },
-                "steepness": {"value": 1.2, "resource": "/slope", "min": 0.2, "max": 3.5, "step": 0.05},
+                "steepness": {
+                    "value": 1.2,
+                    "resource": "/slope",
+                    "min": 0.2,
+                    "max": 3.5,
+                    "step": 0.05,
+                },
             },
         },
         {
@@ -215,16 +229,12 @@ def test_curated_select_options_are_translated() -> None:
 
     data = make_data()
     select_states = json.loads(
-        Path(
-            "custom_components/hargassner_cloud/translations/en.json"
-        ).read_text(encoding="utf-8")
+        Path("custom_components/hargassner_cloud/translations/en.json").read_text(encoding="utf-8")
     )["entity"]["select"]
     for description in select_platform.build_definitions(data, False):
         states = select_states.get(description.translation_key, {}).get("state", {})
         for option in description.options or []:
-            assert option in states, (
-                f"{description.translation_key}.{option} has no label"
-            )
+            assert option in states, f"{description.translation_key}.{option} has no label"
 
 
 def test_switch_descriptions() -> None:
@@ -245,8 +255,11 @@ def test_button_descriptions() -> None:
 def test_climate_parameter_selection() -> None:
     data = make_data()
     widget = data.widget("HEATING_CIRCUIT_RADIATOR", "1")
-    assert climate_platform._find_setpoint(widget).key == "room_temperature_heating"
-    assert climate_platform._find_circuit_mode(widget).key == "mode"
+    assert widget is not None
+    setpoint = climate_platform._find_setpoint(widget)
+    mode = climate_platform._find_circuit_mode(widget)
+    assert setpoint is not None and setpoint.key == "room_temperature_heating"
+    assert mode is not None and mode.key == "mode"
 
 
 def test_every_translation_key_is_translated() -> None:
@@ -255,18 +268,14 @@ def test_every_translation_key_is_translated() -> None:
 
     data = make_data()
     translations = json.loads(
-        Path(
-            "custom_components/hargassner_cloud/translations/en.json"
-        ).read_text(encoding="utf-8")
+        Path("custom_components/hargassner_cloud/translations/en.json").read_text(encoding="utf-8")
     )["entity"]
-    groups = {
+    groups: dict[str, list[Any]] = {
         "sensor": [
             *sensor_platform.heater_sensors(),
             *sensor_platform.buffer_sensors(),
             *sensor_platform.boiler_sensors(1),
-            *sensor_platform.heating_circuit_sensors(
-                "HEATING_CIRCUIT_RADIATOR", 1
-            ),
+            *sensor_platform.heating_circuit_sensors("HEATING_CIRCUIT_RADIATOR", 1),
             *sensor_platform.controller_sensors(include_outdoor=False),
         ],
         "binary_sensor": binary_platform.build_definitions(data),
