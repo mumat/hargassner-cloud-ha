@@ -1,0 +1,367 @@
+{
+  "title": "Hargassner Cloud",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Mit Hargassner Cloud verbinden",
+        "description": "Gib die E-Mail-Adresse und das Passwort deines Hargassner-Kontos ein.",
+        "data": {
+          "username": "E-Mail",
+          "password": "Passwort",
+          "base_url": "Basis-URL",
+          "area": "Bereich"
+        }
+      },
+      "installation": {
+        "title": "Installation auswählen",
+        "description": "Es wurden mehrere Installationen gefunden. Bitte eine auswählen.",
+        "data": {
+          "installation": "Installation"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Erneut anmelden",
+        "description": "Bestätige oder aktualisiere deine Hargassner-Zugangsdaten.",
+        "data": {
+          "username": "E-Mail",
+          "password": "Passwort"
+        }
+      }
+    },
+    "error": {
+      "auth": "Anmeldung fehlgeschlagen. Prüfe E-Mail-Adresse und Passwort.",
+      "web_client_credentials": "Die öffentlichen Zugangsdaten des Hargassner-Webclients konnten nicht ermittelt oder wurden abgelehnt. Prüfe, ob eine neuere Version der Integration verfügbar ist.",
+      "maintenance": "Die Hargassner Cloud ist wegen Wartungsarbeiten vorübergehend nicht verfügbar. Versuche es später erneut.",
+      "cannot_connect": "Verbindung zur Hargassner Cloud fehlgeschlagen.",
+      "no_installations": "Für dieses Konto wurden keine Installationen gefunden.",
+      "unknown": "Unbekannter Fehler."
+    },
+    "abort": {
+      "already_configured": "Diese Installation ist bereits konfiguriert.",
+      "reauth_successful": "Erneute Anmeldung erfolgreich.",
+      "cannot_connect": "Es wurden keine Installationen gefunden."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Hargassner Cloud Optionen",
+        "data": {
+          "scan_interval_seconds": "Aktualisierungsintervall in Sekunden",
+          "area": "Bereich",
+          "expose_all_parameters": "Alle beschreibbaren Parameter als Entitäten anzeigen",
+          "enable_measurements": "Optionale Messwert-Sensoren aktivieren",
+          "field_overrides_json": "Feld-Overrides (JSON)"
+        }
+      }
+    },
+    "error": {
+      "invalid_mapping": "Das Mapping muss ein JSON-Objekt mit einem Objekt je Entitätsschlüssel sein."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "heater_status": {
+        "name": "Kesselstatus",
+        "state": {
+          "off": "Aus",
+          "on": "Ein",
+          "ignition": "Zündung",
+          "ignition_wait": "Warte auf Zündung",
+          "efficiency_fire": "Vollbrand",
+          "throttle_efficiency_fire": "Teillast",
+          "burn_out": "Ausbrand",
+          "embers_keeping": "Gluterhaltung",
+          "residual_heating": "Restwärme",
+          "overheating": "Überhitzung",
+          "deashing": "Entaschung",
+          "filling": "Befüllung",
+          "overheat_protection": "Überhitzungsschutz",
+          "manual": "Manuell",
+          "door_open": "Tür offen",
+          "door_closed": "Tür geschlossen",
+          "block_protection": "Verstopfungsschutz",
+          "ash_drawer_open": "Aschekasten offen",
+          "burn_assistant": "Brandassistent",
+          "backup_mode_logs": "Notbetrieb Scheitholz"
+        }
+      },
+      "heater_operation": {
+        "name": "Heizprogramm",
+        "state": {
+          "automatic": "Automatik",
+          "boiler": "Kessel",
+          "chimney_sweeper": "Kaminkehrer",
+          "combination_off": "Kombibetrieb aus",
+          "combination_on": "Kombibetrieb ein",
+          "manual": "Manuell",
+          "off": "Aus",
+          "pellets_disabled": "Pellets gesperrt",
+          "stop_firing": "Brand stoppen"
+        }
+      },
+      "flue_gas_temperature": {
+        "name": "Abgastemperatur"
+      },
+      "heater_temperature": {
+        "name": "Kesseltemperatur"
+      },
+      "heater_temperature_target": {
+        "name": "Kessel-Solltemperatur"
+      },
+      "combustion_efficiency": {
+        "name": "Wirkungsgrad"
+      },
+      "fuel_stock": {
+        "name": "Pelletsvorrat"
+      },
+      "outdoor_temperature": {
+        "name": "Außentemperatur"
+      },
+      "outdoor_temperature_average": {
+        "name": "Außentemperatur (Mittel)"
+      },
+      "buffer_status": {
+        "name": "Pufferstatus",
+        "state": {
+          "off": "Aus",
+          "on": "Ein",
+          "boiler_charging": "Kesselbeladung",
+          "charging": "Beladung",
+          "ignore_request": "Anforderung ignoriert",
+          "manual": "Manuell",
+          "residual_heating": "Restwärme"
+        }
+      },
+      "buffer_state_of_charge": {
+        "name": "Pufferladung"
+      },
+      "buffer_volume": {
+        "name": "Pufferkapazität"
+      },
+      "buffer_top_temperature": {
+        "name": "Puffertemperatur oben"
+      },
+      "buffer_middle_temperature": {
+        "name": "Puffertemperatur Mitte"
+      },
+      "buffer_bottom_temperature": {
+        "name": "Puffertemperatur unten"
+      },
+      "boiler_status": {
+        "name": "Boiler {number} Status",
+        "state": {
+          "off": "Aus",
+          "on": "Ein",
+          "boiler_charging": "Boilerbeladung",
+          "manual": "Manuell",
+          "overheating": "Überhitzung",
+          "residual_heating": "Restwärme",
+          "block_protection": "Verstopfungsschutz"
+        }
+      },
+      "boiler_temperature": {
+        "name": "Boiler {number} Temperatur"
+      },
+      "boiler_temperature_target": {
+        "name": "Boiler {number} Solltemperatur"
+      },
+      "boiler_state_of_charge": {
+        "name": "Boiler {number} Ladung"
+      },
+      "circuit_status": {
+        "name": "HK{number} Status",
+        "state": {
+          "off": "Aus",
+          "on": "Ein",
+          "heating": "Heizen",
+          "cooling": "Kühlen",
+          "reduction_transition": "Übergang auf Absenkbetrieb",
+          "reduction": "Absenkbetrieb",
+          "daily_nightly_deactivation": "Tag-/Nachtabschaltung",
+          "summer_deactivation": "Sommerabschaltung",
+          "freeze_protection": "Frostschutz",
+          "screed_heating": "Estrichtrocknung",
+          "manual": "Manuell",
+          "residual_heating": "Restwärme",
+          "solar_heating": "Solarheizung",
+          "boiler_charging": "Kesselbeladung"
+        }
+      },
+      "circuit_operating_mode": {
+        "name": "HK{number} Modus",
+        "state": {
+          "automatic": "Automatik",
+          "off": "Aus",
+          "heating": "Heizen",
+          "reduction": "Absenkbetrieb",
+          "cooling": "Kühlen",
+          "dry_out": "Estrichtrocknung",
+          "bridge_heating": "Überbrückung Heizen",
+          "bridge_reduction": "Überbrückung Absenken",
+          "circulation": "Zirkulation",
+          "hv": "Scheitholzkessel",
+          "pk": "Pelletkessel",
+          "hv_pk": "Scheitholz-/Pelletkessel",
+          "logs": "Scheitholz"
+        }
+      },
+      "circuit_flow_temperature": {
+        "name": "HK{number} Vorlauftemperatur"
+      },
+      "circuit_flow_temperature_target": {
+        "name": "HK{number} Vorlauf-Soll"
+      },
+      "circuit_room_temperature_target": {
+        "name": "HK{number} Raum-Soll"
+      },
+      "circuit_room_temperature": {
+        "name": "HK{number} Raumtemperatur"
+      },
+      "controller_source_temperature": {
+        "name": "Wärmequellentemperatur"
+      },
+      "controller_request_temperature": {
+        "name": "Anforderungstemperatur"
+      }
+    },
+    "binary_sensor": {
+      "cloud_connection": {
+        "name": "Online"
+      },
+      "heater_running": {
+        "name": "Kessel ein"
+      },
+      "exhaust_guard": {
+        "name": "Abgaswächter"
+      },
+      "buffer_pump": {
+        "name": "Pufferpumpe aktiv"
+      },
+      "buffer_force_charge": {
+        "name": "Puffer Zwangsbeladung"
+      },
+      "boiler_pump": {
+        "name": "Boiler {number} Pumpe aktiv"
+      },
+      "boiler_force_charge": {
+        "name": "Boiler {number} Zwangsbeladung"
+      },
+      "circuit_pump": {
+        "name": "HK{number} Pumpe aktiv"
+      },
+      "circuit_running": {
+        "name": "HK{number} aktiv"
+      }
+    },
+    "number": {
+      "fuel_stock_level": {
+        "name": "Pelletsvorrat"
+      },
+      "hot_water_target": {
+        "name": "Warmwasser-Solltemperatur"
+      },
+      "room_setpoint_day": {
+        "name": "HK{number} Raumtemperatur (Heizen)"
+      },
+      "room_setpoint_night": {
+        "name": "HK{number} Raumtemperatur (Absenken)"
+      },
+      "room_offset": {
+        "name": "HK{number} Raumtemperatur-Korrektur"
+      },
+      "heating_curve_slope": {
+        "name": "HK{number} Heizkurven-Steigung"
+      },
+      "heating_cutoff": {
+        "name": "HK{number} Heizung-Aus-Temperatur"
+      },
+      "day_setback_cutoff": {
+        "name": "HK{number} Absenkung-Aus-Temperatur Tag"
+      },
+      "night_setback_cutoff": {
+        "name": "HK{number} Absenkung-Aus-Temperatur Nacht"
+      }
+    },
+    "select": {
+      "heater_operation": {
+        "name": "Heizprogramm",
+        "state": {
+          "automatic": "Automatik",
+          "boiler": "Kessel",
+          "chimney_sweeper": "Kaminkehrer",
+          "combination_off": "Kombibetrieb aus",
+          "combination_on": "Kombibetrieb ein",
+          "manual": "Manuell",
+          "off": "Aus",
+          "pellets_disabled": "Pellets gesperrt",
+          "stop_firing": "Brand stoppen"
+        }
+      },
+      "solar_operating_mode": {
+        "name": "Solarmodus",
+        "state": {
+          "off": "Aus",
+          "on": "Ein",
+          "automatic": "Automatik",
+          "manual": "Manuell"
+        }
+      },
+      "circuit_operating_mode": {
+        "name": "HK{number} Modus",
+        "state": {
+          "automatic": "Automatik",
+          "off": "Aus",
+          "heating": "Heizen",
+          "reduction": "Absenkbetrieb",
+          "cooling": "Kühlen",
+          "dry_out": "Estrichtrocknung",
+          "bridge_heating": "Überbrückung Heizen",
+          "bridge_reduction": "Überbrückung Absenken",
+          "circulation": "Zirkulation",
+          "hv": "Scheitholzkessel",
+          "pk": "Pelletkessel",
+          "hv_pk": "Scheitholz-/Pelletkessel",
+          "logs": "Scheitholz"
+        }
+      },
+      "bathroom_boost": {
+        "name": "HK{number} Badezimmerheizung",
+        "state": {
+          "off": "Aus",
+          "on": "Ein"
+        }
+      },
+      "pool_boost": {
+        "name": "HK{number} Poolheizung",
+        "state": {
+          "off": "Aus",
+          "on": "Ein",
+          "automatic": "Automatik"
+        }
+      }
+    },
+    "button": {
+      "force_hot_water_charge": {
+        "name": "Warmwasser sofort laden"
+      },
+      "acknowledge_events": {
+        "name": "Meldungen quittieren"
+      },
+      "start_ignition": {
+        "name": "Zündung starten"
+      }
+    },
+    "climate": {
+      "heating_circuit": {
+        "name": "HK{number} Thermostat"
+      }
+    }
+  },
+  "issues": {
+    "web_client_credentials": {
+      "title": "Der Hargassner-Webclient hat sich geändert",
+      "description": "Die Integration konnte die öffentlichen Zugangsdaten des Hargassner-Webclients nicht ermitteln oder sie wurden vom Portal abgelehnt. Prüfe, ob eine neuere Version der Integration verfügbar ist. Deine persönlichen Hargassner-Zugangsdaten müssen normalerweise nicht geändert werden."
+    }
+  }
+}

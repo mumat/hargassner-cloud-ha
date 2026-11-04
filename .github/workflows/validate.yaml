@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install dev tooling
+        run: python -m pip install --upgrade pip && python -m pip install -r requirements-dev.txt
+      - name: Byte-compile
+        run: python -m compileall -q custom_components tests
+      - name: Parse every JSON file
+        run: |
+          python - <<'PY'
+          import glob, json
+          paths = [
+              "hacs.json",
+              "custom_components/hargassner_cloud/manifest.json",
+              "custom_components/hargassner_cloud/strings.json",
+              *glob.glob("custom_components/hargassner_cloud/translations/*.json"),
+          ]
+          for path in paths:
+              with open(path, encoding="utf-8") as handle:
+                  json.load(handle)
+          print(f"parsed {len(paths)} JSON files")
+          PY
+      - name: Run unit tests
+        run: pytest -q
+      - name: Check formatting
+        run: ruff format --check custom_components tests
+      - name: Lint
+        run: ruff check custom_components tests
+      - name: Type-check
+        run: mypy custom_components tests
+
+  manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: home-assistant/actions/hassfest@master
+
+  hacs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hacs/action@main
+        with:
+          category: integration

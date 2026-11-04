@@ -1,0 +1,19 @@
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+markers = [
+    "live: tests that require opt-in access to the real Hargassner Cloud API",
+]
+
+[tool.mypy]
+explicit_package_bases = true
+python_version = "3.13"
+ignore_missing_imports = true
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "ASYNC"]
+ignore = ["B008"]

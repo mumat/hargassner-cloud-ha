@@ -1,0 +1,367 @@
+{
+  "title": "Hargassner Cloud",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Hargassner Cloud",
+        "description": "Enter the email address and password of your Hargassner account.",
+        "data": {
+          "username": "Email",
+          "password": "Password",
+          "base_url": "Base URL",
+          "area": "Area"
+        }
+      },
+      "installation": {
+        "title": "Select installation",
+        "description": "Multiple installations were found. Choose one.",
+        "data": {
+          "installation": "Installation"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reauthenticate",
+        "description": "Confirm or update your Hargassner credentials.",
+        "data": {
+          "username": "Email",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "auth": "Authentication failed. Check your email address and password.",
+      "web_client_credentials": "The public Hargassner web-client credentials could not be discovered or were rejected. Check whether a newer integration version is available.",
+      "maintenance": "Hargassner Cloud is temporarily unavailable for maintenance. Try again later.",
+      "cannot_connect": "Unable to connect to Hargassner Cloud.",
+      "no_installations": "No installations were found for this account.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "This installation is already configured.",
+      "reauth_successful": "Reauthentication was successful.",
+      "cannot_connect": "No installations were found."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Hargassner Cloud options",
+        "data": {
+          "scan_interval_seconds": "Update interval in seconds",
+          "area": "Area",
+          "expose_all_parameters": "Expose all writable parameters as entities",
+          "enable_measurements": "Enable optional measurement sensors",
+          "field_overrides_json": "Field overrides (JSON)"
+        }
+      }
+    },
+    "error": {
+      "invalid_mapping": "The mapping must be a JSON object containing an object for each entity key."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "heater_status": {
+        "name": "Heater status",
+        "state": {
+          "off": "Off",
+          "on": "On",
+          "ignition": "Ignition",
+          "ignition_wait": "Awaiting ignition",
+          "efficiency_fire": "Full combustion",
+          "throttle_efficiency_fire": "Part load",
+          "burn_out": "Burn out",
+          "embers_keeping": "Ember retention",
+          "residual_heating": "Residual heating",
+          "overheating": "Overheating",
+          "deashing": "Deashing",
+          "filling": "Filling",
+          "overheat_protection": "Overheat protection",
+          "manual": "Manual",
+          "door_open": "Door open",
+          "door_closed": "Door closed",
+          "block_protection": "Blockage protection",
+          "ash_drawer_open": "Ash drawer open",
+          "burn_assistant": "Combustion assistant",
+          "backup_mode_logs": "Log emergency mode"
+        }
+      },
+      "heater_operation": {
+        "name": "Heating program",
+        "state": {
+          "automatic": "Automatic",
+          "boiler": "Boiler",
+          "chimney_sweeper": "Chimney sweeper",
+          "combination_off": "Combination mode off",
+          "combination_on": "Combination mode on",
+          "manual": "Manual",
+          "off": "Off",
+          "pellets_disabled": "Pellets disabled",
+          "stop_firing": "Stop firing"
+        }
+      },
+      "flue_gas_temperature": {
+        "name": "Flue gas temperature"
+      },
+      "heater_temperature": {
+        "name": "Heater temperature"
+      },
+      "heater_temperature_target": {
+        "name": "Heater target temperature"
+      },
+      "combustion_efficiency": {
+        "name": "Efficiency"
+      },
+      "fuel_stock": {
+        "name": "Pellet stock"
+      },
+      "outdoor_temperature": {
+        "name": "Outdoor temperature"
+      },
+      "outdoor_temperature_average": {
+        "name": "Outdoor temperature (average)"
+      },
+      "buffer_status": {
+        "name": "Buffer status",
+        "state": {
+          "off": "Off",
+          "on": "On",
+          "boiler_charging": "Boiler charging",
+          "charging": "Charging",
+          "ignore_request": "Ignoring request",
+          "manual": "Manual",
+          "residual_heating": "Residual heating"
+        }
+      },
+      "buffer_state_of_charge": {
+        "name": "Buffer charge"
+      },
+      "buffer_volume": {
+        "name": "Buffer capacity"
+      },
+      "buffer_top_temperature": {
+        "name": "Buffer temperature top"
+      },
+      "buffer_middle_temperature": {
+        "name": "Buffer temperature middle"
+      },
+      "buffer_bottom_temperature": {
+        "name": "Buffer temperature bottom"
+      },
+      "boiler_status": {
+        "name": "Boiler {number} status",
+        "state": {
+          "off": "Off",
+          "on": "On",
+          "boiler_charging": "Boiler charging",
+          "manual": "Manual",
+          "overheating": "Overheating",
+          "residual_heating": "Residual heating",
+          "block_protection": "Blockage protection"
+        }
+      },
+      "boiler_temperature": {
+        "name": "Boiler {number} temperature"
+      },
+      "boiler_temperature_target": {
+        "name": "Boiler {number} target temperature"
+      },
+      "boiler_state_of_charge": {
+        "name": "Boiler {number} charge"
+      },
+      "circuit_status": {
+        "name": "HC{number} status",
+        "state": {
+          "off": "Off",
+          "on": "On",
+          "heating": "Heating",
+          "cooling": "Cooling",
+          "reduction_transition": "Transition to reduced mode",
+          "reduction": "Reduced mode",
+          "daily_nightly_deactivation": "Day/night shutdown",
+          "summer_deactivation": "Summer shutdown",
+          "freeze_protection": "Freeze protection",
+          "screed_heating": "Screed heating",
+          "manual": "Manual",
+          "residual_heating": "Residual heating",
+          "solar_heating": "Solar heating",
+          "boiler_charging": "Boiler charging"
+        }
+      },
+      "circuit_operating_mode": {
+        "name": "HC{number} mode",
+        "state": {
+          "automatic": "Automatic",
+          "off": "Off",
+          "heating": "Heating",
+          "reduction": "Reduced mode",
+          "cooling": "Cooling",
+          "dry_out": "Screed drying",
+          "bridge_heating": "Bridge heating",
+          "bridge_reduction": "Bridge reduced mode",
+          "circulation": "Circulation",
+          "hv": "Log boiler",
+          "pk": "Pellet boiler",
+          "hv_pk": "Log/pellet boiler",
+          "logs": "Logs"
+        }
+      },
+      "circuit_flow_temperature": {
+        "name": "HC{number} flow temperature"
+      },
+      "circuit_flow_temperature_target": {
+        "name": "HC{number} flow target"
+      },
+      "circuit_room_temperature_target": {
+        "name": "HC{number} room target"
+      },
+      "circuit_room_temperature": {
+        "name": "HC{number} room temperature"
+      },
+      "controller_source_temperature": {
+        "name": "Heat source temperature"
+      },
+      "controller_request_temperature": {
+        "name": "Requested temperature"
+      }
+    },
+    "binary_sensor": {
+      "cloud_connection": {
+        "name": "Online"
+      },
+      "heater_running": {
+        "name": "Heater on"
+      },
+      "exhaust_guard": {
+        "name": "Exhaust guard"
+      },
+      "buffer_pump": {
+        "name": "Buffer pump active"
+      },
+      "buffer_force_charge": {
+        "name": "Buffer force charging"
+      },
+      "boiler_pump": {
+        "name": "Boiler {number} pump active"
+      },
+      "boiler_force_charge": {
+        "name": "Boiler {number} force charging"
+      },
+      "circuit_pump": {
+        "name": "HC{number} pump active"
+      },
+      "circuit_running": {
+        "name": "HC{number} active"
+      }
+    },
+    "number": {
+      "fuel_stock_level": {
+        "name": "Pellet stock"
+      },
+      "hot_water_target": {
+        "name": "Hot water target temperature"
+      },
+      "room_setpoint_day": {
+        "name": "HC{number} room temperature (heating)"
+      },
+      "room_setpoint_night": {
+        "name": "HC{number} room temperature (reduced)"
+      },
+      "room_offset": {
+        "name": "HC{number} room temperature correction"
+      },
+      "heating_curve_slope": {
+        "name": "HC{number} heating curve steepness"
+      },
+      "heating_cutoff": {
+        "name": "HC{number} heating off temperature"
+      },
+      "day_setback_cutoff": {
+        "name": "HC{number} day setback off temperature"
+      },
+      "night_setback_cutoff": {
+        "name": "HC{number} night setback off temperature"
+      }
+    },
+    "select": {
+      "heater_operation": {
+        "name": "Heating program",
+        "state": {
+          "automatic": "Automatic",
+          "boiler": "Boiler",
+          "chimney_sweeper": "Chimney sweeper",
+          "combination_off": "Combination mode off",
+          "combination_on": "Combination mode on",
+          "manual": "Manual",
+          "off": "Off",
+          "pellets_disabled": "Pellets disabled",
+          "stop_firing": "Stop firing"
+        }
+      },
+      "solar_operating_mode": {
+        "name": "Solar mode",
+        "state": {
+          "off": "Off",
+          "on": "On",
+          "automatic": "Automatic",
+          "manual": "Manual"
+        }
+      },
+      "circuit_operating_mode": {
+        "name": "HC{number} mode",
+        "state": {
+          "automatic": "Automatic",
+          "off": "Off",
+          "heating": "Heating",
+          "reduction": "Reduced mode",
+          "cooling": "Cooling",
+          "dry_out": "Screed drying",
+          "bridge_heating": "Bridge heating",
+          "bridge_reduction": "Bridge reduced mode",
+          "circulation": "Circulation",
+          "hv": "Log boiler",
+          "pk": "Pellet boiler",
+          "hv_pk": "Log/pellet boiler",
+          "logs": "Logs"
+        }
+      },
+      "bathroom_boost": {
+        "name": "HC{number} bathroom heating",
+        "state": {
+          "off": "Off",
+          "on": "On"
+        }
+      },
+      "pool_boost": {
+        "name": "HC{number} pool heating",
+        "state": {
+          "off": "Off",
+          "on": "On",
+          "automatic": "Automatic"
+        }
+      }
+    },
+    "button": {
+      "force_hot_water_charge": {
+        "name": "Force hot water charge"
+      },
+      "acknowledge_events": {
+        "name": "Acknowledge events"
+      },
+      "start_ignition": {
+        "name": "Start ignition"
+      }
+    },
+    "climate": {
+      "heating_circuit": {
+        "name": "HC{number} thermostat"
+      }
+    }
+  },
+  "issues": {
+    "web_client_credentials": {
+      "title": "The Hargassner web client has changed",
+      "description": "The integration could not discover the public Hargassner web-client credentials or the portal rejected them. Check whether a newer integration version is available. Your personal Hargassner credentials normally do not need to be changed."
+    }
+  }
+}
