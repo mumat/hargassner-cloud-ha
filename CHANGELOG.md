@@ -2,6 +2,15 @@
 
 Notable, user-visible changes are recorded here.
 
+## 0.1.1 — 2026-11-08
+
+- Fixed writes (numbers, selects, switches, buttons): widget `resource` paths
+  are now resolved under the portal's `/api` root instead of the host root.
+- Send the client `Branding` header on every request, matching the official
+  web client.
+- Failed writes now record their phase/status in diagnostics and log the
+  response body at debug level.
+
 ## 0.1.0 — 2026-11-04
 
 First public version.

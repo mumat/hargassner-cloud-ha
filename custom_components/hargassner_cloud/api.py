@@ -17,6 +17,7 @@ from aiohttp import (
 
 from .auth import fetch_client_credentials
 from .const import (
+    BRANDING,
     DEFAULT_CLIENT_ID,
     DEFAULT_CLIENT_SECRET,
     INSTALLATION_RELATIONS,
@@ -124,10 +125,26 @@ class CloudApiClient:
     # ------------------------------------------------------------------
 
     def _headers(self, authenticated: bool = True) -> dict[str, str]:
-        headers = {"User-Agent": USER_AGENT, "Accept": "application/json"}
+        headers = {
+            "User-Agent": USER_AGENT,
+            "Accept": "application/json",
+            "Branding": BRANDING,
+        }
         if authenticated and self._access_token:
             headers["Authorization"] = f"Bearer {self._access_token}"
         return headers
+
+    def _resource_url(self, resource: str) -> str:
+        """Build an absolute URL from a widget resource path.
+
+        The portal returns resources relative to the ``/api`` root, but be
+        tolerant of values that already include ``/api`` or a full origin.
+        """
+        if resource.startswith(("http://", "https://")):
+            return resource
+        if resource.startswith("/api/"):
+            return f"{self._base}{resource}"
+        return f"{self._base}/api/{resource.lstrip('/')}"
 
     # ------------------------------------------------------------------
     # Credentials
@@ -339,6 +356,11 @@ class CloudApiClient:
                 if response.status == 401 and retry:
                     retry_needed = True
                 elif response.status >= 400:
+                    try:
+                        detail = (await response.text())[:200]
+                    except (ClientError, ValueError):
+                        detail = ""
+                    _LOGGER.debug("%s %s -> HTTP %s: %s", method, url, response.status, detail)
                     return response.status, None
                 else:
                     try:
@@ -582,18 +604,20 @@ class CloudApiClient:
 
     async def write_parameter(self, resource: str, value: Any) -> None:
         """Write a parameter using the resource URL from the API payload."""
-        url = resource if resource.startswith("http") else f"{self._base}{resource}"
+        url = self._resource_url(resource)
         status, _ = await self._request_json("PATCH", url, json={"value": value})
         if status not in (200, 204):
+            self._record("patch", "failed", http_status=status)
             raise CloudApiError(status, f"PATCH {resource}")
         self._record("patch", "success", http_status=status)
         _LOGGER.debug("PATCH %s = %r [%s]", resource, value, status)
 
     async def run_action(self, resource: str) -> None:
         """Trigger an action using the resource URL from the API payload."""
-        url = resource if resource.startswith("http") else f"{self._base}{resource}"
+        url = self._resource_url(resource)
         status, _ = await self._request_json("POST", url)
         if status not in (200, 204):
+            self._record("action", "failed", http_status=status)
             raise CloudApiError(status, f"POST {resource}")
         self._record("action", "success", http_status=status)
         _LOGGER.debug("POST %s [%s]", resource, status)

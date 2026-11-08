@@ -184,3 +184,59 @@ def test_latest_measurements_picks_newest_values(monkeypatch: pytest.MonkeyPatch
     result = run(client._latest_samples("d", ["1", "2"]))
 
     assert result == {"1": 5, "2": 7}
+
+
+def test_resource_url_targets_api_root(monkeypatch: pytest.MonkeyPatch) -> None:
+    patch_discovery(monkeypatch, None)
+    client = make_client(FakeSession())
+
+    assert (
+        client._resource_url("/installations/1/widgets/x")
+        == f"{BASE}/api/installations/1/widgets/x"
+    )
+    assert (
+        client._resource_url("installations/1/widgets/x") == f"{BASE}/api/installations/1/widgets/x"
+    )
+    assert (
+        client._resource_url("/api/installations/1/widgets/x")
+        == f"{BASE}/api/installations/1/widgets/x"
+    )
+    assert client._resource_url("https://other.example/x") == "https://other.example/x"
+
+
+def test_headers_include_branding() -> None:
+    client = make_client(FakeSession())
+    headers = client._headers()
+    assert headers["Branding"] == "BRANDING_HARGASSNER"
+    assert headers["Accept"] == "application/json"
+
+
+def test_write_parameter_targets_api_path(monkeypatch: pytest.MonkeyPatch) -> None:
+    patch_discovery(monkeypatch, None)
+    session = FakeSession(requests=[FakeResponse(200, {})])
+    client = make_client(session)
+    give_token(client)
+
+    run(client.write_parameter("/installations/42/widgets/heater/parameters/fuel_stock", 5))
+
+    assert session.request_calls[0][0] == "PATCH"
+    assert (
+        session.request_calls[0][1]
+        == f"{BASE}/api/installations/42/widgets/heater/parameters/fuel_stock"
+    )
+    assert session.request_calls[0][2]["json"] == {"value": 5}
+
+
+def test_run_action_targets_api_path(monkeypatch: pytest.MonkeyPatch) -> None:
+    patch_discovery(monkeypatch, None)
+    session = FakeSession(requests=[FakeResponse(204)])
+    client = make_client(session)
+    give_token(client)
+
+    run(client.run_action("/installations/42/widgets/boilers/1/actions/force-charging"))
+
+    assert session.request_calls[0][0] == "POST"
+    assert (
+        session.request_calls[0][1]
+        == f"{BASE}/api/installations/42/widgets/boilers/1/actions/force-charging"
+    )

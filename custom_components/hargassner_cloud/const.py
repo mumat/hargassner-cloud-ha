@@ -54,7 +54,7 @@ MAX_SCAN_INTERVAL = 3600
 DEFAULT_CLIENT_ID = "1"
 DEFAULT_CLIENT_SECRET = "aSYsAYj7Gsl5v9tPEDdS1hhXTUezgJk1NhOZ1bHR"
 BRANDING = "BRANDING_HARGASSNER"
-USER_AGENT = "hargassner-cloud-ha/0.1.0 (+https://github.com/mumat/hargassner-cloud-ha)"
+USER_AGENT = "hargassner-cloud-ha/0.1.1 (+https://github.com/mumat/hargassner-cloud-ha)"
 
 # ---------------------------------------------------------------------------
 # CloudWidget types
